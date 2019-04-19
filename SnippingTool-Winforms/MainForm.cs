@@ -7,29 +7,35 @@ namespace SnippingTool_Winforms
 {
     public partial class MainForm : Form
     {
+        private Image _image;
+
         public MainForm()
         {
             InitializeComponent();
+            clipboardButton.Enabled = false;
         }
+
+
 
         private void OnAreaSelected(object sender, EventArgs e)
         {
-            var image = SnippingForm.Image;
+            _image = SnippingForm.Image;
+            clipboardButton.Enabled = true;
 
             var maxImgHeight = 500;
             var maxImgWidth = 800;
 
-            if (image.Width > maxImgWidth || image.Height > maxImgHeight)
+            if (_image.Width > maxImgWidth || _image.Height > maxImgHeight)
             {
-                pictureBox1.Image = ResizeImage(image, maxImgWidth, maxImgHeight);
+                pictureBox1.Image = ResizeImage(_image, maxImgWidth, maxImgHeight);
             }
             else
             {
-                pictureBox1.Image = image;
+                pictureBox1.Image = _image;
             }
         }
 
-        private void SnaphotButton_Click(object sender, EventArgs e)
+        private void SnapshotButton_Click(object sender, EventArgs e)
         {
             SnippingForm.AreaSelected += OnAreaSelected;
             SnippingForm.Snip();
@@ -54,6 +60,11 @@ namespace SnippingTool_Winforms
             graph.DrawImage(image, (targetWidth - scaledWidth) / 2, (targetHeight - scaledHeight) / 2, scaledWidth, scaledHeight);
 
             return resizedImage;
+        }
+
+        private void ClipboardButton_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetImage(_image);
         }
     }
 }
